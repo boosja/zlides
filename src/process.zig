@@ -46,4 +46,8 @@ pub const Process = struct {
     pub fn write(self: *Process, buf: []const u8) !usize {
         return try self.stdout.write(buf);
     }
+
+    pub fn clear(self: *Process) !usize {
+        return try self.stdout.write(clear_buffer);
+    }
 };
