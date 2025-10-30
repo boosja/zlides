@@ -30,12 +30,12 @@ pub fn main() !void {
         const newPage: usize, const status: Status =
             switch (cmd) {
                 '^' => .{ page, .OK },
-                'j' => if (page + 1 < slides.len) .{ page + 1, .OK } else .{ page, .LAST_SLIDE },
-                ' ' => if (page + 1 < slides.len) .{ page + 1, .OK } else .{ page, .LAST_SLIDE },
-                'k' => if (0 < page) .{ page - 1, .OK } else .{ page, .FIRST_SLIDE },
+                'j' => forward(1, page, slides.len),
+                ' ' => forward(1, page, slides.len),
+                'k' => backward(1, page),
 
-                'J' => if (page + 5 < slides.len) .{ page + 5, .OK } else .{ slides.len - 1, .LAST_SLIDE },
-                'K' => if (0 < page -| 5) .{ page - 5, .OK } else .{ 0, .FIRST_SLIDE },
+                'J' => forward(5, page, slides.len),
+                'K' => backward(5, page),
 
                 'q' => break,
                 else => .{ page, .NOOP },
@@ -64,3 +64,10 @@ pub fn main() !void {
 
 const Status = enum { OK, FIRST_SLIDE, LAST_SLIDE, NOOP };
 
+fn forward(step: usize, page: usize, max: usize) struct { usize, Status } {
+    return if (page + step < max) .{ page + 1, .OK } else .{ max - 1, .LAST_SLIDE };
+}
+
+fn backward(step: usize, page: usize) struct { usize, Status } {
+    return if (0 < page -| step) .{ page - step, .OK } else .{ 0, .FIRST_SLIDE };
+}
