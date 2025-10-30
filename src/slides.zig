@@ -59,10 +59,6 @@ test "splits pages" {
     const pages = try splitPages(std.testing.allocator, rawSlides, "---");
     defer std.testing.allocator.free(pages);
 
-    for (pages) |p| {
-        std.debug.print("[start]\n{s}\n[end]\n", .{p});
-    }
-
     const expected = &[_][]const u8{
         "Hello world!\n",
         "\nThis is the second slide\n",
