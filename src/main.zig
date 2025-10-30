@@ -42,11 +42,21 @@ pub fn main() !void {
             };
 
         page = newPage;
-        _ = status;
 
         _ = try process.clear();
         _ = try process.write(slides[page]);
         _ = try process.write("\n");
+
+        var buf: [7]u8 = undefined;
+        const pagination = try std.fmt.bufPrint(&buf, "[{}/{}]", .{ page + 1, slides.len });
+        _ = try process.write(pagination);
+
+        const info = switch (status) {
+            .FIRST_SLIDE => " beginning",
+            .LAST_SLIDE => " end",
+            else => "",
+        };
+        _ = try process.write(info);
 
         _ = try process.read(&cmd_buf);
     }
