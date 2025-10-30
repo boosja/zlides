@@ -30,11 +30,11 @@ pub fn main() !void {
         const newPage: usize, const status: Status =
             switch (cmd) {
                 '^' => .{ page, .OK },
-                'j' => forward(1, page, slides.len),
                 ' ' => forward(1, page, slides.len),
-                'k' => backward(1, page),
-
+                'j' => forward(1, page, slides.len),
                 'J' => forward(5, page, slides.len),
+
+                'k' => backward(1, page),
                 'K' => backward(5, page),
 
                 'q' => break,
