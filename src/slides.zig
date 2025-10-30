@@ -72,29 +72,3 @@ test "splits pages" {
         try std.testing.expectEqualStrings(e, p);
     }
 }
-
-pub const Slider = struct {
-    slides: [][]const u8,
-    page: usize = 0,
-
-    fn next(self: *Slider) ?[]const u8 {
-        return if (self.page < self.slides.len - 1) {
-            self.page += 1;
-            return self.slides[self.page];
-        } else null;
-    }
-
-    fn prev(self: *Slider) ?[]const u8 {
-        return if (0 < self.page) {
-            self.page -= 1;
-            return self.slides[self.page];
-        } else null;
-    }
-
-    fn go(self: *Slider, n: usize) ?[]const u8 {
-        return if (0 <= n and n < self.slides.len) {
-            self.page = n;
-            return self.slides[self.page];
-        } else null;
-    }
-};
