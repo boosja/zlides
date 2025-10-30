@@ -31,6 +31,12 @@ pub fn main() !void {
             switch (cmd) {
                 '^' => .{ page, .OK },
                 'j' => if (page + 1 < slides.len) .{ page + 1, .OK } else .{ page, .LAST_SLIDE },
+                ' ' => if (page + 1 < slides.len) .{ page + 1, .OK } else .{ page, .LAST_SLIDE },
+                'k' => if (0 < page) .{ page - 1, .OK } else .{ page, .FIRST_SLIDE },
+
+                'J' => if (page + 5 < slides.len) .{ page + 5, .OK } else .{ slides.len - 1, .LAST_SLIDE },
+                'K' => if (0 < page -| 5) .{ page - 5, .OK } else .{ 0, .FIRST_SLIDE },
+
                 'q' => break,
                 else => .{ page, .NOOP },
             };
@@ -46,5 +52,5 @@ pub fn main() !void {
     }
 }
 
-const Status = enum { OK, LAST_SLIDE, NOOP };
+const Status = enum { OK, FIRST_SLIDE, LAST_SLIDE, NOOP };
 
