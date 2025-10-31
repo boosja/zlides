@@ -27,3 +27,14 @@ End card
 ```
 
 Then run: `zlides slides.txt`.
+
+## Navigation
+
+| Hotkey | Action                  |
+|--------|-------------------------|
+| ` `    | Next slide              |
+| `j`    | Next slide              |
+| `J`    | Jump 5 slides forward   |
+| `k`    | Previous slide          |
+| `K`    | Jump 5 slides backward  |
+| `q`    | Quit                    |
