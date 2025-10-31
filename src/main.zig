@@ -1,6 +1,7 @@
 const std = @import("std");
 const Process = @import("process.zig").Process;
 const splitPages = @import("slides.zig").splitPages;
+const padPages = @import("slides.zig").padPages;
 
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
@@ -15,8 +16,10 @@ pub fn main() !void {
     const content = try std.fs.cwd().readFileAlloc(allocator, filepath, 1024);
     //defer allocator.free(content);
 
-    const slides = try splitPages(allocator, content, "---");
-    //defer allocator.free(slides);
+    const pages = try splitPages(allocator, content, "---");
+    //defer allocator.free(pages);
+
+    const slides = try padPages(allocator, pages);
 
     // process handling
     var process = try Process.init();
