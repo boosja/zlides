@@ -8,3 +8,22 @@ A terminal slideshow written in Zig. Inspired by
 - Build: `zig build`
   - Builds to `zig-out/bin/zlides`
 - Run: `zig build run -- filepath-to-slides.txt`
+
+## Example
+
+`slides.txt`:
+```
+————————————————————
+
+Title page
+
+---
+
+Second page
+
+  Some content
+---
+End card
+```
+
+Then run: `zlides slides.txt`.
