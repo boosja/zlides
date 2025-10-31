@@ -68,3 +68,73 @@ test "splits pages" {
         try std.testing.expectEqualStrings(e, p);
     }
 }
+
+fn countChar(char: u8, s: []const u8) usize {
+    var count: usize = 0;
+    for (s) |c| {
+        if (c == char) {
+            count += 1;
+        }
+    }
+
+    return count;
+}
+
+test "counts chars in string" {
+    const s = "This\nis\ncounting\nlines";
+
+    try std.testing.expectEqual(3, countChar('\n', s));
+    try std.testing.expectEqual(4, countChar('i', s));
+    try std.testing.expectEqual(0, countChar('x', s));
+}
+
+pub fn padPages(allocator: Allocator, pages: [][]const u8) ![][]const u8 {
+    var biggest: usize = 0;
+    for (pages) |s| {
+        const newlines = countChar('\n', s);
+        if (biggest < newlines) {
+            biggest = newlines;
+        }
+    }
+
+    var newPages: std.ArrayList([]const u8) = try .initCapacity(allocator, pages.len);
+
+    var paddedPage: std.ArrayList(u8) = .empty;
+    for (pages) |page| {
+        const newlines = countChar('\n', page);
+        const diff = biggest - newlines;
+        try paddedPage.appendSlice(allocator, page);
+        try paddedPage.appendNTimes(allocator, '\n', diff);
+        newPages.appendAssumeCapacity(try paddedPage.toOwnedSlice(allocator));
+    }
+
+    return newPages.toOwnedSlice(allocator);
+}
+
+test "pads pages" {
+    const rawSlides =
+        \\
+        \\Hello world!
+        \\---
+        \\This is the second slide
+        \\
+        \\
+        \\Large page
+        \\---
+        \\...and this the third
+    ;
+    const pages = try splitPages(std.testing.allocator, rawSlides, "\n---\n");
+    defer std.testing.allocator.free(pages);
+
+    const paddedPages = try padPages(std.testing.allocator, pages);
+    defer {
+        for (paddedPages) |p| {
+            std.testing.allocator.free(p);
+        }
+        std.testing.allocator.free(paddedPages);
+    }
+
+    for (paddedPages) |p| {
+        try std.testing.expectEqual(3, countChar('\n', p));
+    }
+}
