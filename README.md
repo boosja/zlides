@@ -1,6 +1,6 @@
 # Zlides
 
-A terminal slideshow written in Zig. Inspired by
+A terminal slideshow written in Zig (v0.15.1). Inspired by
 [bbslideshow](https://github.com/teodorlu/bbslideshow).
 
 ## The Runnin's
