@@ -7,26 +7,32 @@ fn getChar(i: usize, s: []const u8) ?u8 {
 
 test "get char" {
     const s: []const u8 = "hello\n---\nworld!";
+    try std.testing.expect(getChar(5, s) == '\n');
     try std.testing.expect(getChar(6, s) == '-');
     try std.testing.expect(getChar(7, s) == '-');
     try std.testing.expect(getChar(8, s) == '-');
 }
 
 fn isDelimiter(delim: []const u8, i: usize, s: []const u8) bool {
-    return (getChar(i, s) == delim[0] and
-        std.mem.eql(u8, delim, s[i .. i + delim.len]));
+    return getChar(i, s) == delim[0] and
+        (i + delim.len < s.len) and
+        std.mem.eql(u8, delim, s[i .. i + delim.len]);
 }
 
 test "is delimiter" {
-    const delim = "---";
-    const str = "hello\n---\nworld!";
-    const isDelim1 = isDelimiter(delim, 0, str);
-    const isDelim2 = isDelimiter(delim, 6, str);
-    const isDelim3 = isDelimiter(delim, 14, str);
+    const delim = "\n---\n";
 
-    try std.testing.expect(!isDelim1);
-    try std.testing.expect(isDelim2);
-    try std.testing.expect(!isDelim3);
+    const start_of_str = isDelimiter(delim, 0, "hello\n---\nworld!");
+    try std.testing.expect(!start_of_str);
+
+    const delimiter = isDelimiter(delim, 5, "hello\n---\nworld!");
+    try std.testing.expect(delimiter);
+
+    const end_of_str = isDelimiter(delim, 15, "hello\n---\nworld!");
+    try std.testing.expect(!end_of_str);
+
+    const newline_at_end = isDelimiter(delim, 16, "hello\n---\nworld!\n");
+    try std.testing.expect(!newline_at_end);
 }
 
 pub fn splitPages(allocator: Allocator, s: []const u8, delimiter: []const u8) ![][]const u8 {
@@ -56,7 +62,7 @@ test "splits pages" {
         \\---
         \\...and this the third
     ;
-    const pages = try splitPages(std.testing.allocator, rawSlides, "---");
+    const pages = try splitPages(std.testing.allocator, rawSlides, "\n---\n");
     defer std.testing.allocator.free(pages);
 
     const expected = &[_][]const u8{
@@ -140,7 +146,7 @@ test "pads pages" {
 }
 
 pub fn makeSlides(allocator: Allocator, fileContent: []u8) ![][]const u8 {
-    const pages = try splitPages(allocator, fileContent, "---");
+    const pages = try splitPages(allocator, fileContent, "\n---\n");
     const slides = try padPages(allocator, pages);
     return slides;
 }
