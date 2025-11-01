@@ -138,3 +138,9 @@ test "pads pages" {
         try std.testing.expectEqual(3, countChar('\n', p));
     }
 }
+
+pub fn makeSlides(allocator: Allocator, fileContent: []u8) ![][]const u8 {
+    const pages = try splitPages(allocator, fileContent, "---");
+    const slides = try padPages(allocator, pages);
+    return slides;
+}
