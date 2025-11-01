@@ -38,20 +38,20 @@ pub const Zlides = struct {
                     else => .{ page, .NOOP },
                 };
 
-            _ = try process.clear();
-            _ = try process.write(slides[page]);
-            _ = try process.write("\n");
-
             var buf: [7]u8 = undefined;
             const pagination = try std.fmt.bufPrint(&buf, "[{}/{}]", .{ page + 1, slides.len });
-            _ = try process.write(pagination);
 
             const info = switch (status) {
                 .FIRST_SLIDE => " beginning",
                 .LAST_SLIDE => " end",
                 else => "",
             };
+
+            _ = try process.clear();
+            _ = try process.write(pagination);
             _ = try process.write(info);
+            _ = try process.write("\n");
+            _ = try process.write(slides[page]);
 
             _ = try process.read(&cmd_buf);
         }
