@@ -24,7 +24,7 @@ pub const Zlides = struct {
         while (true) {
             const cmd = cmd_buf[0];
 
-            const newPage: usize, const status: Status =
+            page, const status: Status =
                 switch (cmd) {
                     '^' => .{ page, .OK },
                     ' ' => forward(1, page, slides.len),
@@ -37,8 +37,6 @@ pub const Zlides = struct {
                     'q' => break,
                     else => .{ page, .NOOP },
                 };
-
-            page = newPage;
 
             _ = try process.clear();
             _ = try process.write(slides[page]);
