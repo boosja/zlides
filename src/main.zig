@@ -14,7 +14,7 @@ pub fn main() !void {
     defer std.process.argsFree(allocator, args);
 
     const filepath = args[1];
-    const content = try std.fs.cwd().readFileAlloc(allocator, filepath, 1024);
+    const content = try std.fs.cwd().readFileAlloc(allocator, filepath, 1024 * 1024);
     //defer allocator.free(content);
 
     var zlides = try Zlides.makeFrom(allocator, content);
