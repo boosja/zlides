@@ -61,11 +61,31 @@ pub const Zlides = struct {
 const Status = enum { OK, FIRST_SLIDE, LAST_SLIDE, NOOP };
 
 fn forward(step: usize, page: usize, max: usize) struct { usize, Status } {
-    return if (page + step < max) .{ page + 1, .OK } else .{ max - 1, .LAST_SLIDE };
+    return if (page + step < max) .{ page + step, .OK } else .{ max - 1, .LAST_SLIDE };
+}
+
+test "moves slides forward once" {
+    try std.testing.expectEqual(.{ 2, .OK }, forward(1, 1, 10));
+}
+test "moves slides forward 5 pages" {
+    try std.testing.expectEqual(.{ 6, .OK }, forward(5, 1, 10));
+}
+test "moves slides forward to last page" {
+    try std.testing.expectEqual(.{ 9, .LAST_SLIDE }, forward(5, 7, 10));
 }
 
 fn backward(step: usize, page: usize) struct { usize, Status } {
     return if (0 < page -| step) .{ page - step, .OK } else .{ 0, .FIRST_SLIDE };
+}
+
+test "moves slides backward once" {
+    try std.testing.expectEqual(.{ 1, .OK }, backward(1, 2));
+}
+test "moves slides backward 5 pages" {
+    try std.testing.expectEqual(.{ 1, .OK }, backward(5, 6));
+}
+test "moves slides backward to first page" {
+    try std.testing.expectEqual(.{ 0, .FIRST_SLIDE }, backward(5, 3));
 }
 
 // From zig init:
