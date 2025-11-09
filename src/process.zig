@@ -1,4 +1,6 @@
 const std = @import("std");
+const tokenizer = @import("tokenizer.zig");
+const Allocator = std.mem.Allocator;
 const File = std.fs.File;
 const posix = std.posix;
 const fmt = std.fmt;
@@ -51,3 +53,72 @@ pub const Process = struct {
         return try self.stdout.write(clear_buffer);
     }
 };
+
+const ANSI = struct {
+    pub const reset = "\x1b[0m";
+    pub const bold = "\x1B[1m";
+    pub const red = "\x1b[31m";
+    pub const green = "\x1b[32m";
+    pub const yellow = "\x1b[33m";
+    pub const blue = "\x1b[34m";
+    pub const magenta = "\x1b[35m";
+    pub const cyan = "\x1b[36m";
+};
+
+const Keyword = enum {
+    constant,
+    public,
+    func,
+    structure,
+    enumerator,
+};
+
+const KeywordMap = std.StaticStringMap(Keyword).initComptime(.{
+    .{ "const", .constant },
+    .{ "pub", .public },
+    .{ "fn", .func },
+    .{ "struct", .structure },
+    .{ "enum", .enumerator },
+});
+
+fn toANSI(token: []const u8) ?[]const u8 {
+    if (KeywordMap.get(token)) |_| {
+        return ANSI.blue;
+    }
+
+    return null;
+}
+
+test "highlights const token" {
+    const highlighted = toANSI("const").?;
+    try std.testing.expectEqualStrings("\x1b[34m", highlighted);
+}
+
+pub fn highlight(allocator: Allocator, s: []const u8) ![]const u8 {
+    const tokens = try tokenizer.tokenize2(allocator, s);
+    defer allocator.free(tokens);
+
+    var hl: std.ArrayList([]const u8) = .empty;
+    defer hl.deinit(allocator);
+
+    for (tokens) |t| {
+        const ansi = toANSI(t);
+        if (ansi) |code| {
+            try hl.append(allocator, code);
+            try hl.append(allocator, t);
+            try hl.append(allocator, ANSI.reset);
+        } else {
+            try hl.append(allocator, t);
+        }
+    }
+
+    return std.mem.join(allocator, "", hl.items);
+}
+
+test "highlight" {
+    const code = "const hello = \"world\";";
+    const hl = try highlight(std.testing.allocator, code);
+    defer std.testing.allocator.free(hl);
+
+    try std.testing.expectEqualStrings("\x1b[34mconst\x1b[0m hello = \"world\";", hl);
+}
