@@ -53,7 +53,7 @@ pub const Zlides = struct {
             _ = try process.write(pagination);
             _ = try process.write(info);
             _ = try process.write("\x1b[0m");
-            _ = try process.write("\n");
+            _ = try process.write("\n\n");
 
             const highlighted = try highlight(allocator, slides[page]);
             _ = try process.write(highlighted);
