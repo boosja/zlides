@@ -98,11 +98,13 @@ const KeywordMap = std.StaticStringMap(Keyword).initComptime(.{
 const Types = enum {
     t_void,
     t_u8,
+    t_arrayList,
 };
 
 const TypeMap = std.StaticStringMap(Types).initComptime(.{
     .{ "void", .t_void },
     .{ "u8", .t_u8 },
+    .{ "std.ArrayList", .t_arrayList },
 });
 
 fn toANSI(token: []const u8) ?[]const u8 {
