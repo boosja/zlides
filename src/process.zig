@@ -93,9 +93,21 @@ const KeywordMap = std.StaticStringMap(Keyword).initComptime(.{
     .{ "defer", .dereference },
 });
 
+const Types = enum {
+    t_void,
+    t_u8,
+};
+
+const TypeMap = std.StaticStringMap(Types).initComptime(.{
+    .{ "void", .t_void },
+    .{ "u8", .t_u8 },
+});
+
 fn toANSI(token: []const u8) ?[]const u8 {
     if (KeywordMap.get(token)) |_| {
         return ANSI.blue;
+    } else if (TypeMap.get(token)) |_| {
+        return ANSI.green;
     } else if (std.mem.startsWith(u8, token, "error.")) {
         return ANSI.red;
     }
