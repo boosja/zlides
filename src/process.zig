@@ -67,6 +67,7 @@ const ANSI = struct {
 
 const Keyword = enum {
     constant,
+    variable,
     public,
     func,
     structure,
@@ -76,12 +77,16 @@ const Keyword = enum {
     yeet,
     tryer,
     catcher,
+    loop,
+    whilst,
     dereference,
     compilation,
+    inliner,
 };
 
 const KeywordMap = std.StaticStringMap(Keyword).initComptime(.{
     .{ "const", .constant },
+    .{ "var", .variable },
     .{ "pub", .public },
     .{ "fn", .func },
     .{ "struct", .structure },
@@ -91,12 +96,16 @@ const KeywordMap = std.StaticStringMap(Keyword).initComptime(.{
     .{ "return", .yeet },
     .{ "try", .tryer },
     .{ "catch", .catcher },
+    .{ "for", .loop },
+    .{ "while", .whilst },
     .{ "defer", .dereference },
     .{ "comptime", .compilation },
+    .{ "inline", .inliner },
 });
 
 const Types = enum {
     t_void,
+    t_anytype,
     t_u8,
     t_u16,
     t_u32,
@@ -117,6 +126,7 @@ const Types = enum {
 
 const TypeMap = std.StaticStringMap(Types).initComptime(.{
     .{ "void", .t_void },
+    .{ "anytype", .t_anytype },
     .{ "u8", .t_u8 },
     .{ "u16", .t_u16 },
     .{ "u32", .t_u32 },
