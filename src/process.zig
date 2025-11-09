@@ -161,7 +161,7 @@ fn toANSI(token: []const u8) ?[]const u8 {
     if (token.len > 1 and std.mem.eql(u8, token[0..2], "//")) {
         return ANSI.yellow;
     }
-    if (std.mem.startsWith(u8, token, "error.")) {
+    if (std.mem.startsWith(u8, token, "error")) {
         return ANSI.red;
     }
 
