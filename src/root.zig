@@ -32,10 +32,12 @@ pub const Zlides = struct {
                     'n' => forward(1, page, slides.len),
                     'j' => forward(1, page, slides.len),
                     'J' => forward(5, page, slides.len),
+                    'd' => forward(10, page, slides.len),
 
                     'p' => backward(1, page),
                     'k' => backward(1, page),
                     'K' => backward(5, page),
+                    'u' => backward(10, page),
 
                     'q' => break,
                     else => .{ page, .NOOP },
