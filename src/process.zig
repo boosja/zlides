@@ -71,6 +71,12 @@ const Keyword = enum {
     func,
     structure,
     enumerator,
+    whether,
+    rather,
+    yeet,
+    tryer,
+    catcher,
+    dereference,
 };
 
 const KeywordMap = std.StaticStringMap(Keyword).initComptime(.{
@@ -79,6 +85,12 @@ const KeywordMap = std.StaticStringMap(Keyword).initComptime(.{
     .{ "fn", .func },
     .{ "struct", .structure },
     .{ "enum", .enumerator },
+    .{ "if", .whether },
+    .{ "else", .rather },
+    .{ "return", .yeet },
+    .{ "try", .tryer },
+    .{ "catch", .catcher },
+    .{ "defer", .dereference },
 });
 
 fn toANSI(token: []const u8) ?[]const u8 {
