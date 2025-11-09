@@ -29,9 +29,11 @@ pub const Zlides = struct {
                 switch (cmd) {
                     '^' => .{ page, .OK },
                     ' ' => forward(1, page, slides.len),
+                    'n' => forward(1, page, slides.len),
                     'j' => forward(1, page, slides.len),
                     'J' => forward(5, page, slides.len),
 
+                    'p' => backward(1, page),
                     'k' => backward(1, page),
                     'K' => backward(5, page),
 
