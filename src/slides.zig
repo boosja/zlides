@@ -147,6 +147,6 @@ test "pads pages" {
 
 pub fn makeSlides(allocator: Allocator, fileContent: []u8) ![][]const u8 {
     const pages = try splitPages(allocator, fileContent, "\n---\n");
-    const slides = try padPages(allocator, pages);
-    return slides;
+    // const slides = try padPages(allocator, pages);
+    return pages;
 }
