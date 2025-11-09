@@ -77,6 +77,7 @@ const Keyword = enum {
     tryer,
     catcher,
     dereference,
+    compilation,
 };
 
 const KeywordMap = std.StaticStringMap(Keyword).initComptime(.{
@@ -91,6 +92,7 @@ const KeywordMap = std.StaticStringMap(Keyword).initComptime(.{
     .{ "try", .tryer },
     .{ "catch", .catcher },
     .{ "defer", .dereference },
+    .{ "comptime", .compilation },
 });
 
 const Types = enum {
