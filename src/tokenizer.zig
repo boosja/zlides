@@ -297,6 +297,16 @@ pub fn tokenize2(allocator: Allocator, s: []const u8) ![][]const u8 {
                     break;
                 }
             }
+        } else if (c == '#') {
+            i += 1;
+            while (getChar(i, s)) |sc| : (i += 1) {
+                if (sc == '\n') {
+                    const next = i + 1;
+                    try tokens.append(allocator, s[start..next]);
+                    start = next;
+                    break;
+                }
+            }
         }
     }
 
@@ -454,6 +464,21 @@ test "tokenizes comments too 2" {
     defer std.testing.allocator.free(tokens);
 
     const expected = &[_][]const u8{ "// comment\n", "const", " ", "n", " ", "=", " ", "1", ";" };
+    for (expected, tokens) |e, t| {
+        try std.testing.expectEqualStrings(e, t);
+    }
+}
+
+test "tokenizes markdown headings" {
+    const str =
+        \\# Heading
+        \\const n = 1;
+    ;
+    const tokens = try tokenize2(std.testing.allocator, str);
+    defer std.testing.allocator.free(tokens);
+
+    const expected = &[_][]const u8{ "# Heading\n", "const", " ", "n", " ", "=", " ", "1", ";" };
+    try std.testing.expectEqual(expected.len, tokens.len);
     for (expected, tokens) |e, t| {
         try std.testing.expectEqualStrings(e, t);
     }
