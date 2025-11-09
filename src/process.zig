@@ -117,14 +117,18 @@ fn isDelimiter(c: u8) bool {
 fn toANSI(token: []const u8) ?[]const u8 {
     if (KeywordMap.get(token)) |_| {
         return ANSI.blue;
-    } else if (TypeMap.get(token)) |_| {
+    }
+    if (TypeMap.get(token)) |_| {
         return ANSI.green;
-    } else if (token[0] == '"') {
-        return ANSI.yellow;
-    } else if (std.mem.startsWith(u8, token, "error.")) {
-        return ANSI.red;
-    } else if (isDelimiter(token[0])) {
+    }
+    if (isDelimiter(token[0])) {
         return ANSI.cyan;
+    }
+    if (token[0] == '"') {
+        return ANSI.yellow;
+    }
+    if (std.mem.startsWith(u8, token, "error.")) {
+        return ANSI.red;
     }
 
     return null;
