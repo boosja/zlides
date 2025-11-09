@@ -84,6 +84,8 @@ const KeywordMap = std.StaticStringMap(Keyword).initComptime(.{
 fn toANSI(token: []const u8) ?[]const u8 {
     if (KeywordMap.get(token)) |_| {
         return ANSI.blue;
+    } else if (std.mem.startsWith(u8, token, "error.")) {
+        return ANSI.red;
     }
 
     return null;
