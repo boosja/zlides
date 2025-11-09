@@ -127,6 +127,9 @@ fn toANSI(token: []const u8) ?[]const u8 {
     if (token[0] == '"') {
         return ANSI.yellow;
     }
+    if (token[0] == '#') {
+        return ANSI.bold;
+    }
     if (token.len > 1 and std.mem.eql(u8, token[0..2], "//")) {
         return ANSI.yellow;
     }
