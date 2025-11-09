@@ -107,6 +107,13 @@ const TypeMap = std.StaticStringMap(Types).initComptime(.{
     .{ "std.ArrayList", .t_arrayList },
 });
 
+fn isDelimiter(c: u8) bool {
+    return switch (c) {
+        '(', ')', '[', ']', '{', '}', ',', ':', ';', '*', '!', '?' => true,
+        else => false,
+    };
+}
+
 fn toANSI(token: []const u8) ?[]const u8 {
     if (KeywordMap.get(token)) |_| {
         return ANSI.blue;
@@ -118,6 +125,8 @@ fn toANSI(token: []const u8) ?[]const u8 {
         return ANSI.yellow;
     } else if (std.mem.startsWith(u8, token, "error.")) {
         return ANSI.red;
+    } else if (isDelimiter(token[0])) {
+        return ANSI.cyan;
     }
 
     return null;
