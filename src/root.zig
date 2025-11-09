@@ -3,6 +3,7 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 const makeSlides = @import("slides.zig").makeSlides;
 const Process = @import("process.zig").Process;
+const highlight = @import("process.zig").highlight;
 
 pub const Zlides = struct {
     slides: []const []const u8,
@@ -13,7 +14,7 @@ pub const Zlides = struct {
         };
     }
 
-    pub fn show(self: *Zlides) !void {
+    pub fn show(self: *Zlides, allocator: Allocator) !void {
         const slides = self.slides;
 
         var process = try Process.init();
@@ -53,7 +54,9 @@ pub const Zlides = struct {
             _ = try process.write(info);
             _ = try process.write("\x1b[0m");
             _ = try process.write("\n");
-            _ = try process.write(slides[page]);
+
+            const highlighted = try highlight(allocator, slides[page]);
+            _ = try process.write(highlighted);
 
             _ = try process.read(&cmd_buf);
         }

@@ -18,5 +18,5 @@ pub fn main() !void {
     //defer allocator.free(content);
 
     var zlides = try Zlides.makeFrom(allocator, content);
-    try zlides.show();
+    try zlides.show(allocator);
 }
