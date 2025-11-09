@@ -119,8 +119,6 @@ fn toANSI(token: []const u8) ?[]const u8 {
         return ANSI.blue;
     } else if (TypeMap.get(token)) |_| {
         return ANSI.green;
-    } else if (std.ascii.isDigit(token[0])) {
-        return ANSI.green;
     } else if (token[0] == '"') {
         return ANSI.yellow;
     } else if (std.mem.startsWith(u8, token, "error.")) {
