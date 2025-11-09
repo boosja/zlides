@@ -33,8 +33,12 @@ Then run: `zlides slides.txt`.
 | Hotkey | Action                  |
 |--------|-------------------------|
 | ` `    | Next slide              |
+| `n`    | Next slide              |
 | `j`    | Next slide              |
 | `J`    | Jump 5 slides forward   |
+| `d`    | Jump 10 slides forward  |
+| `p`    | Previous slide          |
 | `k`    | Previous slide          |
 | `K`    | Jump 5 slides backward  |
+| `u`    | Jump 10 slides backward |
 | `q`    | Quit                    |
