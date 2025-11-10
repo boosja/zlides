@@ -13,6 +13,10 @@ pub fn main() !void {
     const args = try std.process.argsAlloc(allocator);
     defer std.process.argsFree(allocator, args);
 
+    if (args.len < 2) {
+        std.log.err("You must pass in a filepath to your slides", .{});
+        return;
+    }
     const filepath = args[1];
     const content = try std.fs.cwd().readFileAlloc(allocator, filepath, 1024 * 1024);
     //defer allocator.free(content);
