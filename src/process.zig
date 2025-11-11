@@ -183,6 +183,9 @@ fn toANSI(token: []const u8) ?[]const u8 {
     if (std.mem.startsWith(u8, token, "error")) {
         return ANSI.red;
     }
+    if (std.mem.startsWith(u8, token, "https://")) {
+        return ANSI.magenta;
+    }
 
     return null;
 }

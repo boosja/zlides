@@ -317,6 +317,24 @@ pub fn tokenize2(allocator: Allocator, s: []const u8) ![][]const u8 {
                     break;
                 }
             }
+        } else if (c == 'h' and s[start..].len > 8) {
+            i += 1;
+            const needle = s[start .. start + 8];
+            if (std.mem.eql(u8, needle, "https://")) {
+                i += 7;
+                while (getChar(i, s)) |sc| : (i += 1) {
+                    const isDelim = switch (sc) {
+                        '(', ')', '[', ']', '{', '}', ',', ':', ';' => true,
+                        else => false,
+                    };
+                    if (isWhitespace(sc) or isDelim) {
+                        try tokens.append(allocator, s[start..i]);
+                        start = i;
+                        i -= 1;
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -488,6 +506,34 @@ test "tokenizes markdown headings" {
     defer std.testing.allocator.free(tokens);
 
     const expected = &[_][]const u8{ "# Heading\n", "const", " ", "n", " ", "=", " ", "1", ";" };
+    try std.testing.expectEqual(expected.len, tokens.len);
+    for (expected, tokens) |e, t| {
+        try std.testing.expectEqualStrings(e, t);
+    }
+}
+
+test "tokenizes https:// links" {
+    const str =
+        \\# Heading
+        \\https://www.example.com/item/
+        \\
+        \\(https://www.example2.com/item/)
+        \\https://www.example2.com/item?query=test
+    ;
+    const tokens = try tokenize2(std.testing.allocator, str);
+    defer std.testing.allocator.free(tokens);
+
+    const expected = &[_][]const u8{
+        "# Heading\n",
+        "https://www.example.com/item/",
+        "\n",
+        "\n",
+        "(",
+        "https://www.example2.com/item/",
+        ")",
+        "\n",
+        "https://www.example2.com/item?query=test",
+    };
     try std.testing.expectEqual(expected.len, tokens.len);
     for (expected, tokens) |e, t| {
         try std.testing.expectEqualStrings(e, t);
