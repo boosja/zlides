@@ -287,6 +287,16 @@ pub fn tokenize2(allocator: Allocator, s: []const u8) ![][]const u8 {
                     break;
                 }
             }
+        } else if (c == '`') {
+            i += 1;
+            while (getChar(i, s)) |sc| : (i += 1) {
+                if (sc == '`' and getChar(i - 1, s) != '\\') {
+                    const next = i + 1;
+                    try tokens.append(allocator, s[start..next]);
+                    start = next;
+                    break;
+                }
+            }
         } else if (c == '/' and getChar(i + 1, s) == '/') {
             i += 2;
             while (getChar(i, s)) |sc| : (i += 1) {

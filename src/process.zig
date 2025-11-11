@@ -168,6 +168,9 @@ fn toANSI(token: []const u8) ?[]const u8 {
     if (token[0] == '"') {
         return ANSI.yellow;
     }
+    if (token[0] == '`') {
+        return ANSI.yellow;
+    }
     if (token[0] == '#') {
         return ANSI.bold;
     }
