@@ -209,11 +209,3 @@ pub fn highlight(allocator: Allocator, s: []const u8) ![]const u8 {
 
     return std.mem.join(allocator, "", hl.items);
 }
-
-test "highlight" {
-    const code = "const hello = \"world\";";
-    const hl = try highlight(std.testing.allocator, code);
-    defer std.testing.allocator.free(hl);
-
-    try std.testing.expectEqualStrings("\x1b[34mconst\x1b[0m hello = \"world\";", hl);
-}

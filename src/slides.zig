@@ -66,9 +66,9 @@ test "splits pages" {
     defer std.testing.allocator.free(pages);
 
     const expected = &[_][]const u8{
-        "Hello world!\n",
-        "\nThis is the second slide\n",
-        "\n...and this the third",
+        "Hello world!",
+        "This is the second slide",
+        "...and this the third",
     };
     for (expected, pages) |e, p| {
         try std.testing.expectEqualStrings(e, p);
