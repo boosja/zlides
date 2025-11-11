@@ -57,6 +57,7 @@ pub const Process = struct {
 const ANSI = struct {
     pub const reset = "\x1b[0m";
     pub const bold = "\x1B[1m";
+    pub const strikethrough = "\x1B[9m";
     pub const red = "\x1b[31m";
     pub const green = "\x1b[32m";
     pub const yellow = "\x1b[33m";
@@ -167,6 +168,9 @@ fn toANSI(token: []const u8) ?[]const u8 {
     }
     if (token[0] == '#') {
         return ANSI.bold;
+    }
+    if (token.len > 1 and std.mem.eql(u8, token[0..2], "-#")) {
+        return ANSI.strikethrough;
     }
     if (token.len > 1 and std.mem.eql(u8, token[0..2], "//")) {
         return ANSI.yellow;
